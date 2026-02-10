@@ -11,11 +11,7 @@ https://adventofcode.com/{year}/day/{day}
 """
 
 from pathlib import Path
-
-
-def parse_input(text: str):
-    """Parse the puzzle input."""
-    return text.strip().split('\\n')
+from modules.utils.input_reader import read_lines
 
 
 def part_one(data) -> int:
@@ -32,8 +28,7 @@ def part_two(data) -> int:
 
 def solve():
     """Main solve function."""
-    input_file = Path(__file__).parent / "inputs" / "day_{day_padded}.txt"
-    data = parse_input(input_file.read_text())
+    data = read_lines({year}, {day})
 
     print(f"Part 1: {{part_one(data)}}")
     print(f"Part 2: {{part_two(data)}}")
@@ -41,29 +36,6 @@ def solve():
 
 if __name__ == "__main__":
     solve()
-'''
-
-TEST_TEMPLATE = '''"""Tests for Advent of Code {year} - Day {day}"""
-
-import pytest
-from solutions.year_{year}.day_{day_padded} import part_one, part_two
-
-
-EXAMPLE_INPUT = """\\
-# TODO: Add example input from problem
-"""
-
-
-def test_part_one():
-    """Test part 1 with example."""
-    # TODO: Add assertion
-    pass
-
-
-def test_part_two():
-    """Test part 2 with example."""
-    # TODO: Add assertion
-    pass
 '''
 
 
@@ -74,19 +46,16 @@ def create_day(year: int, day: int):
     # Create paths
     year_dir = Path(f"solutions/year_{year}")
     inputs_dir = year_dir / "inputs"
-    tests_dir = Path(f"tests/year_{year}")
 
     solution_file = year_dir / f"day_{day_padded}.py"
     input_file = inputs_dir / f"day_{day_padded}.txt"
-    test_file = tests_dir / f"test_day_{day_padded}.py"
 
     # Create directories
     year_dir.mkdir(parents=True, exist_ok=True)
     inputs_dir.mkdir(exist_ok=True)
-    tests_dir.mkdir(parents=True, exist_ok=True)
 
     # Create __init__.py files
-    for init_file in [year_dir / "__init__.py", tests_dir / "__init__.py"]:
+    for init_file in [year_dir / "__init__.py"]:
         if not init_file.exists():
             init_file.touch()
 
@@ -105,13 +74,6 @@ def create_day(year: int, day: int):
     else:
         input_file.touch()
         print(f"✅ Created: {input_file}")
-
-    # Create test file
-    if test_file.exists():
-        print(f"⚠️  Test already exists: {test_file}")
-    else:
-        test_file.write_text(TEST_TEMPLATE.format(year=year, day=day, day_padded=day_padded))
-        print(f"✅ Created: {test_file}")
 
     print(f"\n🎄 Ready for {year} Day {day}!")
     print(f"   Input: {input_file}")
